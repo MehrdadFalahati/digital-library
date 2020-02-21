@@ -18,10 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,14 +31,14 @@ public class RdbmsCommentHandler implements CommentHandler {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CommentDto> searchComment(Pageable pageable) {
-        Page<CommentEntity> dataPage = repository.findAll(pageable);
+    public Page<CommentDto> searchComment(Long contentId, Pageable pageable) {
+        Page<CommentEntity> dataPage = repository.findAllByContentId(contentId, pageable);
         if (dataPage == null || dataPage.getContent().isEmpty()) {
             return new PageImpl<>(new ArrayList<>());
         }
         Map<String, UserEntity> users = fetchPersons(dataPage.getContent());
-        Map<String, CommentReplyCountResult> countReplies = countRepliesByCommentIds(dataPage.getContent());
-        List<CommentDto> commentDtos = createCommentDtoList(dataPage.getContent(), users, countReplies);
+       // Map<String, CommentReplyCountResult> countReplies = countRepliesByCommentIds(dataPage.getContent());
+        List<CommentDto> commentDtos = createCommentDtoList(dataPage.getContent(), users, new HashMap<>());
         return new PageImpl<>(commentDtos, dataPage.getPageable(), dataPage.getTotalElements());
     }
 

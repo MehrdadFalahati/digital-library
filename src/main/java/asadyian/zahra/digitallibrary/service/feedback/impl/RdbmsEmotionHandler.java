@@ -42,7 +42,7 @@ public class RdbmsEmotionHandler implements EmotionHandler {
 		if (user == null){
 			throw new LocalizedException("emotion_person_dose_not_exist");
 		}
-		EmotionEntity entity = findByCaseAndPerson(contentId, user.getId());
+		EmotionEntity entity = findByContentAndPerson(contentId, user.getId());
 		if (Objects.nonNull(entity) && entity.getEmotionType() != emotion.getType()){
 			entity.setEmotionType(emotion.getType());
 			repository.save(entity);
@@ -52,7 +52,7 @@ public class RdbmsEmotionHandler implements EmotionHandler {
 		repository.save(entity);
 	}
 
-	EmotionEntity findByCaseAndPerson(Long contentId, String userId) {
+	EmotionEntity findByContentAndPerson(Long contentId, String userId) {
 		return repository.findByContentIdAndUserId(contentId, userId);
 	}
 
@@ -75,7 +75,7 @@ public class RdbmsEmotionHandler implements EmotionHandler {
 		if (user == null){
 			throw new LocalizedException("emotion_person_dose_not_exist");
 		}
-		EmotionEntity entity = findByCaseAndPerson(contentId, user.getId());
+		EmotionEntity entity = findByContentAndPerson(contentId, user.getId());
 		if(entity == null) {
 			throw new LocalizedException("emotion_does_not_exist");
 		}
@@ -100,7 +100,7 @@ public class RdbmsEmotionHandler implements EmotionHandler {
 	public EmotionResult count(Long contentId, String userId) {
 		checkExistCase(contentId);
 		UserEntity user = userService.singleUser(userId);
-		EmotionEntity entity = findByCaseAndPerson(contentId, user.getId());
+		EmotionEntity entity = findByContentAndPerson(contentId, user.getId());
 		EmotionResult result = new EmotionResult();
 		if (entity != null) {
 			result.setCurrentType(entity.getEmotionType());
@@ -108,6 +108,16 @@ public class RdbmsEmotionHandler implements EmotionHandler {
 		List<EmotionCountResult> countResults = repository.groupByEmotionType(contentId);
 		countResults.forEach(count -> result.getItem().put(count.getType(), count.getCount()));
 		return result;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Boolean isLike(Long contentId, String userId) {
+		EmotionEntity emotion = repository.findByContentIdAndUserId(contentId, userId);
+		if (emotion == null) {
+			return false;
+		}
+		return emotion.getEmotionType() == EmotionType.LIKE;
 	}
 
 

@@ -13,4 +13,6 @@ public interface EmotionHandler {
 	long countByType(Long contentId, EmotionType type);
 
 	EmotionResult count(Long contentId, String userId);
+
+	Boolean isLike(Long contentId, String id);
 }

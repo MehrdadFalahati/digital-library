@@ -1,11 +1,12 @@
 package asadyian.zahra.digitallibrary.controller;
 
 
+import asadyian.zahra.digitallibrary.controller.model.FileResponse;
+import asadyian.zahra.digitallibrary.controller.model.MultipartFileModel;
+import asadyian.zahra.digitallibrary.controller.model.UploadFileResponse;
 import asadyian.zahra.digitallibrary.domain.entities.FileEntity;
 import asadyian.zahra.digitallibrary.exception.BadRequestException;
 import asadyian.zahra.digitallibrary.exception.FileStorageException;
-import asadyian.zahra.digitallibrary.controller.model.MultipartFileModel;
-import asadyian.zahra.digitallibrary.controller.model.UploadFileResponse;
 import asadyian.zahra.digitallibrary.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,22 @@ public class FileController {
                     .fileName(entity.getFileName())
                     .fileType(file.getContentType())
                     .size(file.getSize())
+                    .build();
+        } catch (IOException e) {
+            log.error("throw I/O Exception", e);
+            throw new FileStorageException("Could not store file " + file.getOriginalFilename() + ". Please try again!", e);
+        }
+
+    }
+
+    @PostMapping("/upload-file")
+    public FileResponse upload(@RequestParam("file") MultipartFile file) {
+        try {
+            MultipartFileModel fileModel = new MultipartFileModel(file);
+            FileEntity entity = fileService.store(fileModel);
+            return FileResponse.builder()
+                    .id(entity.getId())
+                    .fileName(entity.getFileName())
                     .build();
         } catch (IOException e) {
             log.error("throw I/O Exception", e);

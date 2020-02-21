@@ -26,7 +26,9 @@ public class ContentEntity extends AuditModel{
     private Date buyDate;
     @Column(name = "DESCRIPTION", length = 4001)
     private String description;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "RATE_")
+    private Double rate;
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "FK_CONTENT_DATA_ID")
     private FileEntity contentData;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,6 +49,9 @@ public class ContentEntity extends AuditModel{
                 .name(result.name)
                 .buyDate(result.buyDate)
                 .description(result.description)
+                .contentType(new ContentResponse.ContentType(result.getContentType().getId(), result.getContentType().getTitle()))
+                .library( new ContentResponse.Library(result.getLibrary().getId(), result.getLibrary().getTitle()))
+                .contentFileDataId(result.getContentData().getId())
                 .build();
     }
 

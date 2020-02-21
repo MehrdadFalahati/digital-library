@@ -43,8 +43,9 @@ public class LibraryService {
         return repository.findAll().stream().map(LibraryEntity::convert2Responce).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<ItemOption> searchByTitle(String title) {
-        if (title == null) {
+        if (title == null || title.isEmpty()) {
             return repository.findAll().stream().map(l -> new ItemOption(l.getId(), l.getTitle())).collect(Collectors.toList());
         }
         return repository.findByTitleContaining(title).stream().map(l -> new ItemOption(l.getId(), l.getTitle())).collect(Collectors.toList());

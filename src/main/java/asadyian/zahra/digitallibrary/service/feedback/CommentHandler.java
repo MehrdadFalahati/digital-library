@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommentHandler {
 
-	Page<CommentDto> searchComment(Pageable pageable);
+	Page<CommentDto> searchComment(Long contentId, Pageable pageable);
 
 	Page<CommentDto> searchCommentReplies(String commentId, Pageable pageable);
 	

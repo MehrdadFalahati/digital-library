@@ -13,4 +13,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, String>,
     long countByReplyId(String replyId);
     void deleteByReplyId(String replyId);
     Page<CommentEntity> findAllByReplyId(String replyId, Pageable pageable);
+
+    Page<CommentEntity> findAllByContentId(Long contentId, Pageable pageable);
 }

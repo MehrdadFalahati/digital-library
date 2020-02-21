@@ -1,5 +1,6 @@
 package asadyian.zahra.digitallibrary.service;
 
+import asadyian.zahra.digitallibrary.controller.model.ItemOption;
 import asadyian.zahra.digitallibrary.controller.model.attachmenttype.AttachmentTypeRequest;
 import asadyian.zahra.digitallibrary.controller.model.attachmenttype.AttachmentTypeResponse;
 import asadyian.zahra.digitallibrary.domain.entities.AttachmentTypeEntity;
@@ -37,5 +38,13 @@ public class AttachmentTypeService {
     @Transactional(readOnly = true)
     public List<AttachmentTypeResponse> fetchAll() {
         return repository.findAll().stream().map(AttachmentTypeEntity::convert2response).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ItemOption> searchByTitle(String title) {
+        if (title == null || title.isEmpty()) {
+            return repository.findAll().stream().map((a) -> new ItemOption(a.getId(), a.getTitle())).collect(Collectors.toList());
+        }
+        return repository.findAllByTitle(title).stream().map((a) -> new ItemOption(a.getId(), a.getTitle())).collect(Collectors.toList());
     }
 }

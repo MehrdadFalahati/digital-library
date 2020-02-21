@@ -4,6 +4,7 @@ import asadyian.zahra.digitallibrary.domain.entities.AuditModel;
 import asadyian.zahra.digitallibrary.domain.entities.ContentEntity;
 import asadyian.zahra.digitallibrary.domain.entities.UserEntity;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -29,6 +30,8 @@ public class EmotionEntity extends AuditModel {
 	// primary key
 	@Id
 	@Column(name = "EMOTION_ID")
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 
 	// fields

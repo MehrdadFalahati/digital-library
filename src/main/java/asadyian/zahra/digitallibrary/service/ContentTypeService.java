@@ -31,7 +31,7 @@ public class ContentTypeService {
     }
 
     public List<ItemOption> searchByTitle(String title) {
-        if (title == null) {
+        if (title == null || title.isEmpty()) {
             return repository.findAll().stream().map(c -> new ItemOption(c.getId(), c.getTitle())).collect(Collectors.toList());
         }
         return repository.findByTitleContaining(title).stream().map(c -> new ItemOption(c.getId(), c.getTitle())).collect(Collectors.toList());

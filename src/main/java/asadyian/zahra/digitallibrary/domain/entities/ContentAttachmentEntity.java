@@ -19,7 +19,7 @@ public class ContentAttachmentEntity extends AuditModel {
     private Long id;
     @Column(name = "NAME_")
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "FK_ATTACHMENT_DATA_ID")
     private FileEntity attachmentData;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,6 +33,9 @@ public class ContentAttachmentEntity extends AuditModel {
         return ContentAttachmentResponse.builder()
                 .id(entity.id)
                 .name(entity.name)
+                .attachmentType(new ContentAttachmentResponse.AttachmentType(entity.getAttachmentType().getId(), entity.getAttachmentType().getTitle()))
+                .content( new ContentAttachmentResponse.Content(entity.getContent().getId(), entity.getContent().getName()))
+                .fileId( entity.getAttachmentData().getId())
                 .build();
     }
 }

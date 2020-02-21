@@ -1,11 +1,10 @@
 package asadyian.zahra.digitallibrary.controller;
 
+import asadyian.zahra.digitallibrary.controller.model.ItemOption;
 import asadyian.zahra.digitallibrary.controller.model.attachmenttype.AttachmentTypeRequest;
 import asadyian.zahra.digitallibrary.controller.model.attachmenttype.AttachmentTypeResponse;
 import asadyian.zahra.digitallibrary.service.AttachmentTypeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +39,11 @@ public class AttachmentTypeController {
     @GetMapping("/attachment-types")
     public List<AttachmentTypeResponse> fetchLibraries() {
         return service.fetchAll();
+    }
+
+    @GetMapping("/search")
+    public List<ItemOption> search(@RequestParam("title") String title) {
+        return service.searchByTitle(title);
     }
 
 }

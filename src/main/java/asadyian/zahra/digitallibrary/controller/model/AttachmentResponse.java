@@ -1,0 +1,14 @@
+package asadyian.zahra.digitallibrary.controller.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class AttachmentResponse {
+    private Long id;
+    private String name;
+    private String fileUrl;
+}

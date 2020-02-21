@@ -5,10 +5,11 @@ import asadyian.zahra.digitallibrary.controller.model.contentAttachment.ContentA
 import asadyian.zahra.digitallibrary.domain.entities.ContentAttachmentEntity;
 import asadyian.zahra.digitallibrary.domain.repository.ContentAttachmentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,13 +28,14 @@ public class ContentAttachmentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ContentAttachmentResponse> fetchAllByContentId(Long contentId, Pageable pageable) {
-        Page<ContentAttachmentEntity> contentAttachmentPage = repository.findAllByContentId(contentId, pageable);
-        return contentAttachmentPage.map(ContentAttachmentEntity::convert2response);
+    public List<ContentAttachmentResponse> fetchAllByContentId(Long contentId) {
+        List<ContentAttachmentEntity> contentAttachmentPage = repository.findAllByContentId(contentId);
+        return contentAttachmentPage.stream().map(ContentAttachmentEntity::convert2response).collect(Collectors.toList());
     }
 
-    public ContentAttachmentEntity loadById(Long id) {
+    public ContentAttachmentResponse loadById(Long id) {
         return repository.findById(id)
+                .map(ContentAttachmentEntity::convert2response)
                 .orElseThrow(()->new RuntimeException("Can not find entity"));
     }
 }

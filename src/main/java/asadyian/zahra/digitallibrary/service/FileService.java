@@ -50,5 +50,19 @@ public class FileService {
 
     }
 
-
+    @Transactional
+    public FileEntity store(MultipartFileModel file) {
+        if (file.getFileName().contains("..")) {
+            log.error("filename is invalid");
+            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + file.getFileName());
+        }
+        FileEntity entity = FileEntity.builder()
+                .fileName(file.getFileName())
+                .fileType(file.getContentType())
+                .data(file.getBytes())
+                .build();
+        FileEntity fileEntity = repository.saveAndFlush(entity);
+        log.info("save FileEntity[id={}]", fileEntity.getId());
+        return fileEntity;
+    }
 }
